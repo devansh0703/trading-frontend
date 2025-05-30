@@ -2,18 +2,35 @@ import { useState, useEffect } from "react";
 
 interface ChartHeaderProps {
   trendlineCount: number;
+  selectedSymbol: string;
+  onSymbolChange: (symbol: string) => void;
 }
 
-export function ChartHeader({ trendlineCount }: ChartHeaderProps) {
-  const [currentPrice, setCurrentPrice] = useState(43250.75);
+const tradingPairs = [
+  { symbol: 'BTCUSDT', basePrice: 95842.50 },
+  { symbol: 'ETHUSDT', basePrice: 3245.67 },
+  { symbol: 'ADAUSDT', basePrice: 0.8956 },
+  { symbol: 'DOTUSDT', basePrice: 7.234 },
+  { symbol: 'LINKUSDT', basePrice: 23.45 },
+  { symbol: 'MATICUSDT', basePrice: 1.234 },
+  { symbol: 'SOLUSDT', basePrice: 156.78 },
+  { symbol: 'AVAXUSDT', basePrice: 34.56 }
+];
+
+export function ChartHeader({ trendlineCount, selectedSymbol, onSymbolChange }: ChartHeaderProps) {
+  const selectedPairIndex = tradingPairs.findIndex(pair => pair.symbol === selectedSymbol);
+  const [currentPrice, setCurrentPrice] = useState(tradingPairs[selectedPairIndex]?.basePrice || tradingPairs[0].basePrice);
   const [priceChange, setPriceChange] = useState(2.34);
   const [lastUpdate, setLastUpdate] = useState<string>("2 seconds ago");
+
+  const selectedPair = tradingPairs[selectedPairIndex] || tradingPairs[0];
 
   // Simulate real-time price updates
   useEffect(() => {
     const interval = setInterval(() => {
-      const newPrice = currentPrice + (Math.random() - 0.5) * 100;
-      const newChange = ((newPrice - 43000) / 43000 * 100);
+      const basePrice = selectedPair.basePrice;
+      const newPrice = basePrice + (Math.random() - 0.5) * (basePrice * 0.02);
+      const newChange = ((newPrice - basePrice) / basePrice * 100);
       
       setCurrentPrice(newPrice);
       setPriceChange(newChange);
@@ -23,18 +40,26 @@ export function ChartHeader({ trendlineCount }: ChartHeaderProps) {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [currentPrice]);
+  }, [selectedPair]);
 
   return (
     <header className="bg-slate-800 border-b border-slate-700 px-6 py-3 flex items-center justify-between">
       <div className="flex items-center space-x-4">
-        <h1 className="text-xl font-semibold text-white">TrendLine Pro</h1>
+        <h1 className="text-xl font-semibold text-white">Trading Frontend</h1>
         <div className="flex items-center space-x-3 text-sm">
-          <span className="bg-blue-600/20 text-blue-400 px-2 py-1 rounded text-xs font-mono">
-            BTCUSDT
-          </span>
+          <select 
+            value={selectedSymbol} 
+            onChange={(e) => onSymbolChange(e.target.value)}
+            className="bg-slate-700 text-white px-3 py-1 rounded text-sm border border-slate-600 focus:outline-none focus:border-blue-500"
+          >
+            {tradingPairs.map((pair) => (
+              <option key={pair.symbol} value={pair.symbol}>
+                {pair.symbol}
+              </option>
+            ))}
+          </select>
           <span className="font-mono text-white">
-            ${currentPrice.toFixed(2)}
+            ${currentPrice.toFixed(currentPrice < 1 ? 4 : 2)}
           </span>
           <span className={`font-mono text-xs ${
             priceChange >= 0 ? 'text-green-400' : 'text-red-400'
@@ -53,9 +78,6 @@ export function ChartHeader({ trendlineCount }: ChartHeaderProps) {
           <i className="fas fa-chart-line"></i>
           <span>{trendlineCount} Trendlines</span>
         </div>
-        <button className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm transition-colors">
-          <i className="fas fa-cog mr-1"></i>Settings
-        </button>
       </div>
     </header>
   );

@@ -7,6 +7,7 @@ export default function TradingChartPage() {
   const [trendlines, setTrendlines] = useState<TrendlineData[]>([]);
   const [selectedCoordinate, setSelectedCoordinate] = useState<TrendlineData | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [selectedSymbol, setSelectedSymbol] = useState('BTCUSDT');
 
   const handleTrendlineUpdate = (updatedTrendlines: TrendlineData[]) => {
     setTrendlines(updatedTrendlines);
@@ -47,15 +48,24 @@ export default function TradingChartPage() {
     }
   };
 
+  const handleSymbolChange = (symbol: string) => {
+    setSelectedSymbol(symbol);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-slate-900">
-      <ChartHeader trendlineCount={trendlines.length} />
+      <ChartHeader 
+        trendlineCount={trendlines.length} 
+        selectedSymbol={selectedSymbol}
+        onSymbolChange={handleSymbolChange}
+      />
       
       <div className="flex-1 flex">
         <TradingChart
           onTrendlineUpdate={handleTrendlineUpdate}
           onCoordinateDisplay={handleCoordinateDisplay}
           onDrawingStateChange={handleDrawingStateChange}
+          selectedSymbol={selectedSymbol}
           className="flex-1"
         />
         

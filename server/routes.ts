@@ -74,7 +74,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Real Binance OHLC data endpoint
   app.get("/api/ohlc", async (req, res) => {
     try {
-      const response = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=5m&limit=100');
+      const symbol = req.query.symbol as string || 'BTCUSDT';
+      const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=5m&limit=100`);
       const binanceData = await response.json();
       
       const ohlcData = binanceData.map((kline: any[]) => ({

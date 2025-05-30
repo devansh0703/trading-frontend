@@ -33,10 +33,11 @@ interface TradingChartProps {
   onTrendlineUpdate: (trendlines: TrendlineData[]) => void;
   onCoordinateDisplay: (trendline: TrendlineData | null) => void;
   onDrawingStateChange: (isDrawing: boolean) => void;
+  selectedSymbol?: string;
   className?: string;
 }
 
-export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawingStateChange, className }: TradingChartProps) {
+export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawingStateChange, selectedSymbol = 'BTCUSDT', className }: TradingChartProps) {
   const chartRef = useRef<ChartJS<'line', any[], any>>(null);
   const [trendlines, setTrendlines] = useState<TrendlineData[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -49,7 +50,7 @@ export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawing
   // Fetch real OHLC data from API
   const fetchOHLCData = useCallback(async (): Promise<OHLCData[]> => {
     try {
-      const response = await fetch('/api/ohlc');
+      const response = await fetch(`/api/ohlc?symbol=${selectedSymbol}`);
       if (!response.ok) {
         throw new Error('Failed to fetch OHLC data');
       }
@@ -58,7 +59,7 @@ export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawing
       console.error('Error fetching OHLC data:', error);
       return [];
     }
-  }, []);
+  }, [selectedSymbol]);
 
   // Initialize data
   useEffect(() => {
@@ -80,7 +81,7 @@ export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawing
     labels: ohlcData.map(d => new Date(d.timestamp * 1000)),
     datasets: [
       {
-        label: 'BTC Price',
+        label: `${selectedSymbol} Price`,
         data: ohlcData.map(d => ({ x: new Date(d.timestamp * 1000), y: d.close })),
         borderColor: '#2962FF',
         backgroundColor: 'rgba(41, 98, 255, 0.1)',
@@ -108,6 +109,16 @@ export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawing
     ],
   };
 
+  // Calculate dynamic price range for Y-axis
+  const prices = ohlcData.map(d => d.close);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const priceRange = maxPrice - minPrice;
+  const padding = priceRange * 0.1; // Add 10% padding
+  
+  const yMin = Math.max(0, minPrice - padding);
+  const yMax = maxPrice + padding;
+
   const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -128,13 +139,22 @@ export function TradingChart({ onTrendlineUpdate, onCoordinateDisplay, onDrawing
         },
       },
       y: {
+        min: yMin,
+        max: yMax,
         grid: {
           color: '#2A2E39',
         },
         ticks: {
           color: '#868993',
           callback: function(value) {
-            return '$' + Number(value).toLocaleString();
+            const num = Number(value);
+            if (num < 1) {
+              return '$' + num.toFixed(4);
+            } else if (num < 100) {
+              return '$' + num.toFixed(2);
+            } else {
+              return '$' + num.toLocaleString(undefined, { maximumFractionDigits: 0 });
+            }
           },
         },
       },
