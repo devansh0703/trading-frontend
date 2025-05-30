@@ -44,7 +44,6 @@
 - **Data Source**: Binance Public API
 - **Storage**: localStorage (client-side persistence)
 
-
 ### Managing Trendlines
 
 - **View Details**: All active trendlines are listed in the sidebar with:
@@ -60,33 +59,6 @@
 - All drawn trendlines are automatically saved to your browser's localStorage
 - Trendlines will be restored when you reload the page
 - Data persists across browser sessions
-
-## API Endpoints
-
-### GET /api/ohlc
-Fetches real-time Bitcoin OHLC data from Binance.
-
-**Response Format**:
-```json
-[
-  {
-    "timestamp": 1648616400,
-    "open": 43000.50,
-    "high": 43250.75,
-    "low": 42800.25,
-    "close": 43100.00,
-    "volume": 1250.5
-  }
-]
-```
-
-### Trendline API
-- `GET /api/trendlines` - Get all saved trendlines
-- `POST /api/trendlines` - Create a new trendline
-- `PATCH /api/trendlines/:id` - Update a trendline
-- `DELETE /api/trendlines/:id` - Delete a trendline
-
-## Architecture Notes
 
 ### Frontend Architecture
 - **Component Structure**: Modular components using React hooks and TypeScript
