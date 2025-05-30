@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 222 84% 5%; /* #0D1421 */
+  --foreground: 213 31% 91%; /* #E2E8F0 */
+  --muted: 215 28% 17%; /* #1E293B */
+  --muted-foreground: 217 11% 65%; /* #94A3B8 */
+  --popover: 222 84% 5%; /* #0D1421 */
+  --popover-foreground: 213 31% 91%; /* #E2E8F0 */
+  --card: 215 28% 17%; /* #1E293B */
+  --card-foreground: 213 31% 91%; /* #E2E8F0 */
+  --border: 217 32% 17%; /* #334155 */
+  --input: 217 32% 17%; /* #334155 */
+  --primary: 217 91% 60%; /* #1976D2 */
+  --primary-foreground: 222 84% 5%; /* #0D1421 */
+  --secondary: 215 28% 17%; /* #1E293B */
+  --secondary-foreground: 213 31% 91%; /* #E2E8F0 */
+  --accent: 217 32% 17%; /* #334155 */
+  --accent-foreground: 213 31% 91%; /* #E2E8F0 */
+  --destructive: 0 84% 60%; /* #EF5350 */
+  --destructive-foreground: 213 31% 91%; /* #E2E8F0 */
+  --ring: 217 91% 60%; /* #1976D2 */
+  --radius: 0.5rem;
+  --chart-1: 173 58% 39%; /* #26A69A */
+  --chart-2: 4 90% 58%; /* #EF5350 */
+  --chart-3: 217 91% 60%; /* #1976D2 */
+  --chart-4: 43 96% 56%; /* #F4D03F */
+  --chart-5: 27 87% 67%; /* #FF9800 */
+  
+  /* Trading specific colors */
+  --trading-bg: 222 84% 5%; /* #0D1421 */
+  --trading-surface: 215 28% 17%; /* #1E293B */
+  --trading-chart: 222 47% 11%; /* #131722 */
+  --trading-primary: 217 91% 60%; /* #1976D2 */
+  --trading-bull: 173 58% 39%; /* #26A69A */
+  --trading-bear: 4 90% 58%; /* #EF5350 */
+  --trading-text: 213 31% 91%; /* #E2E8F0 */
+  --trading-text-muted: 217 11% 65%; /* #94A3B8 */
+  --trading-border: 217 32% 17%; /* #334155 */
+}
+
+.dark {
+  --background: 222 84% 5%; /* #0D1421 */
+  --foreground: 213 31% 91%; /* #E2E8F0 */
+  --muted: 215 28% 17%; /* #1E293B */
+  --muted-foreground: 217 11% 65%; /* #94A3B8 */
+  --popover: 222 84% 5%; /* #0D1421 */
+  --popover-foreground: 213 31% 91%; /* #E2E8F0 */
+  --card: 215 28% 17%; /* #1E293B */
+  --card-foreground: 213 31% 91%; /* #E2E8F0 */
+  --border: 217 32% 17%; /* #334155 */
+  --input: 217 32% 17%; /* #334155 */
+  --primary: 217 91% 60%; /* #1976D2 */
+  --primary-foreground: 222 84% 5%; /* #0D1421 */
+  --secondary: 215 28% 17%; /* #1E293B */
+  --secondary-foreground: 213 31% 91%; /* #E2E8F0 */
+  --accent: 217 32% 17%; /* #334155 */
+  --accent-foreground: 213 31% 91%; /* #E2E8F0 */
+  --destructive: 0 84% 60%; /* #EF5350 */
+  --destructive-foreground: 213 31% 91%; /* #E2E8F0 */
+  --ring: 217 91% 60%; /* #1976D2 */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-slate-900 text-slate-100;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .trading-bg {
+    background-color: hsl(var(--trading-bg));
+  }
+  
+  .trading-surface {
+    background-color: hsl(var(--trading-surface));
+  }
+  
+  .trading-chart {
+    background-color: hsl(var(--trading-chart));
+  }
+  
+  .trading-text {
+    color: hsl(var(--trading-text));
+  }
+  
+  .trading-text-muted {
+    color: hsl(var(--trading-text-muted));
+  }
+  
+  .trading-border {
+    border-color: hsl(var(--trading-border));
+  }
+
+  .price-positive {
+    color: hsl(var(--chart-1));
+  }
+  
+  .price-negative {
+    color: hsl(var(--chart-2));
+  }
+  
+  .price-neutral {
+    color: hsl(var(--trading-text-muted));
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--trading-bg));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--trading-border));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* Font Awesome CDN for icons */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
